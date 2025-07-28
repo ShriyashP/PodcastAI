@@ -9,15 +9,6 @@ Whisper model via the `openai` Python library.  After transcription, the text
 is split into sentences, vectorised with TF‑IDF and cached so that question
 answering is fast.  A simple similarity‑based approach extracts the most
 relevant sentence as the answer.
-
-NOTE: The code sets `openai.api_key = ""` as a placeholder.  Insert your API
-key before running.  In addition, Python’s `python‑multipart` package is
-required for file uploads.  Install it with `pip install python-multipart`.
-
-This example is self‑contained but not executed in this environment.  It
-illustrates the structure and techniques needed to implement the requested
-feature.  You can integrate a frontend in `templates/index.html` that allows
-users to upload audio or paste a URL and then ask questions.
 """
 
 from __future__ import annotations
@@ -36,21 +27,13 @@ from collections import Counter
 
 import openai
 
-
-# -----------------------------------------------------------------------------
-# Configuration
-
-# Set your OpenAI API key here.  Leave blank and insert your key at runtime.
 openai.api_key = ""
 
 # FastAPI app and templates directory
 app = FastAPI(title="Podcast QA Service", version="0.1.0")
 templates = Jinja2Templates(directory=str((__file__).rsplit("/", 1)[0] + "/templates"))
 
-
-# -----------------------------------------------------------------------------
 # State to hold the latest transcript and its vectorisation
-
 class TranscriptStore:
     """Holds a transcript and its TF‑IDF representation for QA."""
 
@@ -83,8 +66,6 @@ class TranscriptStore:
 
 transcript_store = TranscriptStore()
 
-
-# -----------------------------------------------------------------------------
 # Helper functions
 
 def clean_text(text: str) -> List[str]:
@@ -117,10 +98,7 @@ async def download_audio(url: str) -> bytes:
         raise HTTPException(status_code=400, detail=f"Failed to download audio: {e}")
     return resp.content
 
-
-# -----------------------------------------------------------------------------
 # Routes
-
 @app.get("/", response_class=HTMLResponse)
 async def index(request: Request) -> HTMLResponse:
     """Render the main page with upload and question forms."""
